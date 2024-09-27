@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                             
-// JTOpen (IBM Toolbox for Java - OSS version)                                 
+// JTOpen (AS/400 Toolbox for Java - OSS version)                              
 //                                                                             
-// Filename: SignonEndServerReq.java
+// Filename: HCSRouteNewConnDS.java
 //                                                                             
 // The source code contained herein is licensed under the IBM Public License   
 // Version 1.0, which has been approved by the Open Source Initiative.         
-// Copyright (C) 1997-2001 International Business Machines Corporation and     
+// Copyright (C) 2024 International Business Machines Corporation and     
 // others. All rights reserved.                                                
 //                                                                             
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,26 +16,25 @@ package com.ibm.as400.access;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class SignonEndServerReq extends ClientAccessDataStream
+public class HCSRouteNewConnDS extends ClientAccessDataStream
 {
-  private static final String copyright = "Copyright (C) 1997-2001 International Business Machines Corporation and others.";
+  private static final String copyright = "Copyright (C) 2024 International Business Machines Corporation and others.";
 
-    SignonEndServerReq()
+    public HCSRouteNewConnDS(byte[] _connReqID)
     {
-        super(new byte[20]);
-
-        setLength(20);
-        // setHeaderID(0x0000);
-        setServerID(0xE009);
-        // setCSInstance(0x00000000);
-        // setCorrelation(0x00000000);
-        // setTemplateLen(0x0000);
-        setReqRepID(0x7006);
+      super(new byte[84]);
+      setLength(84);
+      data_[4] = 0x00;
+      setServerID(0xE00B);
+      setTemplateLen(64);
+      setReqRepID(0x7107);
+      
+      System.arraycopy(_connReqID, 0, data_, 20, 64);
     }
 
     void write(OutputStream out) throws IOException
     {
-        if (Trace.traceOn_) Trace.log(Trace.DIAGNOSTIC, "Sending end signon server request..."); //@P0C
-        super.write(out);
+      if (Trace.traceOn_) Trace.log(Trace.DIAGNOSTIC, "Sending route new connection request..."); 
+      super.write(out);
     }
 }
